@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchProducts } from './api'
+import { fetchProducts, placeOrder } from './api'
 import './App.css'
 
 interface Product {
@@ -28,10 +28,23 @@ function App() {
     loadProducts();
   }, []);
 
-  const handleBuyNow = async (productId: number) => {
-    // Mocking an order placement
-    alert(`Placing order for product ID: ${productId}... (Integration to POST /api/order)`);
-    // Example: fetch('http://localhost:9090/api/order', { method: 'POST', body: JSON.stringify({ skuCode: '...', quantity: 1 })})
+  const handleBuyNow = async (productId: number, price: number) => {
+    try {
+      // In a real app we'd get skuCode from the product object properly
+      // We are just simulating a skuCode based on productId for now
+      const skuCode = `SKU-${productId}`;
+      alert(`Placing order for ${skuCode}...`);
+      
+      const responseMessage = await placeOrder({
+        skuCode,
+        price,
+        quantity: 1
+      });
+      
+      alert(`Backend response: ${responseMessage}`);
+    } catch (error: any) {
+      alert(`Error placing order: ${error.message}`);
+    }
   };
 
   return (
@@ -60,7 +73,7 @@ function App() {
                 <p className="product-desc">{p.description}</p>
                 <div className="product-footer">
                   <span className="product-price">${p.price.toFixed(2)}</span>
-                  <button className="btn btn-secondary" onClick={() => handleBuyNow(p.id)}>
+                  <button className="btn btn-secondary" onClick={() => handleBuyNow(p.id, p.price)}>
                     Buy Now
                   </button>
                 </div>
