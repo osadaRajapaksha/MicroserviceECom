@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { fetchProducts } from './api'
 import './App.css'
 
 interface Product {
@@ -13,21 +14,18 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real environment with the backend running, we'd fetch from API Gateway:
-    // fetch('http://localhost:9090/api/product')
+    const loadProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to load products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    // For visual demonstration, mocking some premium products:
-    const mockProducts: Product[] = [
-      { id: 1, name: 'Quantum Core', description: 'Next-gen processing unit with neural threading.', price: 1299.99 },
-      { id: 2, name: 'Neon Keyboard', description: 'Mechanical keyboard with individually addressable ARGB.', price: 149.50 },
-      { id: 3, name: 'Holo Display X', description: '32-inch transparent holographic monitor.', price: 899.00 },
-      { id: 4, name: 'Cyber Mouse', description: 'Ultra-lightweight gaming mouse with optical switches.', price: 89.99 }
-    ];
-    
-    setTimeout(() => {
-      setProducts(mockProducts);
-      setLoading(false);
-    }, 800);
+    loadProducts();
   }, []);
 
   const handleBuyNow = async (productId: number) => {
