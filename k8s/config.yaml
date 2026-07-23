@@ -3,9 +3,12 @@ kind: ConfigMap
 metadata:
   name: ecom-config
 data:
-  SPRING_DATASOURCE_URL: jdbc:mysql://rds-endpoint:3306/ecom_db
+  SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecom_db
   EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
-  SPRING_KAFKA_BOOTSTRAP_SERVERS: msk-broker:9092
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/ecom-realm
+  SPRING_DATA_REDIS_HOST: redis
+  MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
 ---
 apiVersion: v1
 kind: Secret
