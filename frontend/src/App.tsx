@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchProducts, placeOrder } from './api'
+import keycloak from './keycloak'
 import './App.css'
 
 interface Product {
@@ -12,8 +13,17 @@ interface Product {
 function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
+    keycloak.init({ onLoad: 'check-sso' }).then(auth => {
+      setAuthenticated(auth);
+      loadProducts();
+    }).catch(() => {
+      console.error("Keycloak initialization failed");
+      setLoading(false);
+    });
+
     const loadProducts = async () => {
       try {
         const data = await fetchProducts();
@@ -28,7 +38,20 @@ function App() {
     loadProducts();
   }, []);
 
+  const handleLogin = () => {
+    keycloak.login();
+  };
+
+  const handleLogout = () => {
+    keycloak.logout();
+  };
+
   const handleBuyNow = async (productId: number, price: number) => {
+    if (!authenticated) {
+        alert("Please sign in to place an order.");
+        keycloak.login();
+        return;
+    }
     try {
       // In a real app we'd get skuCode from the product object properly
       // We are just simulating a skuCode based on productId for now
@@ -53,7 +76,11 @@ function App() {
       <nav className="navbar glass">
         <div className="logo">MicroStore</div>
         <div>
-          <button className="btn">Sign In</button>
+          {authenticated ? (
+             <button className="btn" onClick={handleLogout}>Sign Out</button>
+          ) : (
+             <button className="btn" onClick={handleLogin}>Sign In</button>
+          )}
         </div>
       </nav>
 
