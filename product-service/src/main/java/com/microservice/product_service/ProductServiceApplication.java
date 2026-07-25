@@ -20,19 +20,16 @@ public class ProductServiceApplication {
 		return args -> {
 			if (productRepository.count() == 0) {
 				Product p1 = new Product();
-				p1.setSkuCode("SKU-1001");
 				p1.setName("iPhone 15 Pro");
 				p1.setDescription("Latest Apple smartphone with titanium frame.");
 				p1.setPrice(new BigDecimal("999.00"));
 
 				Product p2 = new Product();
-				p2.setSkuCode("SKU-1002");
 				p2.setName("Samsung Galaxy S24");
 				p2.setDescription("Samsung's flagship Android device with AI.");
 				p2.setPrice(new BigDecimal("899.00"));
 
 				Product p3 = new Product();
-				p3.setSkuCode("SKU-1003");
 				p3.setName("Sony WH-1000XM5");
 				p3.setDescription("Industry leading noise canceling headphones.");
 				p3.setPrice(new BigDecimal("348.00"));
