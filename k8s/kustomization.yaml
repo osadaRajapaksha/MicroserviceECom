@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - api-gateway.yaml
+  - config.yaml
+  - discovery-server.yaml
+  - frontend.yaml
+  - inventory-service.yaml
+  - kafka-deployment.yaml
+  - keycloak-deployment.yaml
+  - mysql-deployment.yaml
+  - order-service.yaml
+  - product-service.yaml
+  - redis-deployment.yaml
+  - zipkin-deployment.yaml
+  - zookeeper-deployment.yaml
+
+# This section replaces the placeholder 'your-docker-registry' with the actual ECR URL.
+# Replace 'REPLACE_ME_AWS_ACCOUNT_ID' and 'us-east-1' with your actual AWS account ID and region.
+images:
+  - name: your-docker-registry/api-gateway
+    newName: REPLACE_ME_AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/api-gateway
+    newTag: latest
+  - name: your-docker-registry/product-service
+    newName: REPLACE_ME_AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/product-service
+    newTag: latest
+  - name: your-docker-registry/order-service
+    newName: REPLACE_ME_AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/order-service
+    newTag: latest
+  - name: your-docker-registry/inventory-service
+    newName: REPLACE_ME_AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/inventory-service
+    newTag: latest
+  - name: your-docker-registry/discovery-server
+    newName: REPLACE_ME_AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/discovery-server
+    newTag: latest
+  - name: your-docker-registry/frontend
+    newName: REPLACE_ME_AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/frontend
+    newTag: latest
