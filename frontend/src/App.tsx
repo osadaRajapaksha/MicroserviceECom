@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react'
-import { fetchProducts, placeOrder } from './api'
+import { fetchProducts } from './api'
 import keycloak from './keycloak'
 import './App.css'
+import { CartProvider, useCart, Product } from './context/CartContext'
+import { CartSidebar } from './components/CartSidebar'
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-}
-
-function App() {
+function AppContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+  const { addToCart, setIsCartOpen, cartItems } = useCart();
 
   useEffect(() => {
     keycloak.init({ onLoad: 'check-sso' }).then(auth => {
@@ -46,36 +42,18 @@ function App() {
     keycloak.logout();
   };
 
-  const handleBuyNow = async (productId: number, price: number) => {
-    if (!authenticated) {
-        alert("Please sign in to place an order.");
-        keycloak.login();
-        return;
-    }
-    try {
-      // In a real app we'd get skuCode from the product object properly
-      // We are just simulating a skuCode based on productId for now
-      const skuCode = `SKU-${productId}`;
-      alert(`Placing order for ${skuCode}...`);
-      
-      const responseMessage = await placeOrder({
-        skuCode,
-        price,
-        quantity: 1
-      });
-      
-      alert(`Backend response: ${responseMessage}`);
-    } catch (error: any) {
-      alert(`Error placing order: ${error.message}`);
-    }
-  };
+  const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="app-container">
+      <CartSidebar authenticated={authenticated} onLogin={handleLogin} />
       
       <nav className="navbar glass">
         <div className="logo">MicroStore</div>
-        <div>
+        <div className="nav-actions">
+          <button className="btn cart-btn" onClick={() => setIsCartOpen(true)}>
+            Cart 🛒 {totalCartItems > 0 && <span className="cart-badge">{totalCartItems}</span>}
+          </button>
           {authenticated ? (
              <button className="btn" onClick={handleLogout}>Sign Out</button>
           ) : (
@@ -100,8 +78,8 @@ function App() {
                 <p className="product-desc">{p.description}</p>
                 <div className="product-footer">
                   <span className="product-price">${p.price.toFixed(2)}</span>
-                  <button className="btn btn-secondary" onClick={() => handleBuyNow(p.id, p.price)}>
-                    Buy Now
+                  <button className="btn btn-secondary" onClick={() => addToCart(p)}>
+                    Add to Cart
                   </button>
                 </div>
               </div>
@@ -109,8 +87,15 @@ function App() {
           </div>
         )}
       </main>
-      
     </div>
+  )
+}
+
+function App() {
+  return (
+    <CartProvider>
+      <AppContent />
+    </CartProvider>
   )
 }
 
