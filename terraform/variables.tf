@@ -30,7 +30,6 @@ variable "ecr_repositories" {
     "api-gateway",
     "product-service",
     "order-service",
-    "inventory-service",
-    "frontend"
+    "inventory-service"
   ]
 }

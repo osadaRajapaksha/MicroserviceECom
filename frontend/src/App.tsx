@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { fetchProducts } from './api'
 import keycloak from './keycloak'
 import './App.css'
-import { CartProvider, useCart, Product } from './context/CartContext'
+import { CartProvider, useCart, type Product } from './context/CartContext'
 import { CartSidebar } from './components/CartSidebar'
 
 function AppContent() {
