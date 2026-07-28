@@ -12,10 +12,13 @@ public class GatewayConfig {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("product-service", r -> r.path("/api/product", "/api/product/**")
+                        .filters(f -> f.circuitBreaker(c -> c.setName("backendCB").setFallbackUri("forward:/fallback")))
                         .uri("lb://product-service"))
                 .route("order-service", r -> r.path("/api/order", "/api/order/**")
+                        .filters(f -> f.circuitBreaker(c -> c.setName("backendCB").setFallbackUri("forward:/fallback")))
                         .uri("lb://order-service"))
                 .route("inventory-service", r -> r.path("/api/inventory", "/api/inventory/**")
+                        .filters(f -> f.circuitBreaker(c -> c.setName("backendCB").setFallbackUri("forward:/fallback")))
                         .uri("lb://inventory-service"))
                 .build();
     }
