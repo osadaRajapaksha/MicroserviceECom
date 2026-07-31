@@ -14,6 +14,9 @@ resources:
   - redis-deployment.yaml
   - zipkin-deployment.yaml
   - zookeeper-deployment.yaml
+  - prometheus-config.yaml
+  - prometheus-deployment.yaml
+  - grafana-deployment.yaml
 
 # This section replaces the placeholder 'your-docker-registry' with the actual ECR URL.
 # Replace 'REPLACE_ME_AWS_ACCOUNT_ID' and 'us-east-1' with your actual AWS account ID and region.
