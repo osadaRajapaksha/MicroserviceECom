@@ -37,10 +37,13 @@ management:
   health:
     circuitbreakers:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
   endpoints:
     web:
       exposure:
-        include: health
+        include: prometheus, health, info
   endpoint:
     health:
       show-details: always
