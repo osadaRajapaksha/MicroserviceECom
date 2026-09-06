@@ -4,6 +4,7 @@ import keycloak from './keycloak'
 import './App.css'
 import { CartProvider, useCart, type Product } from './context/CartContext'
 import { CartSidebar } from './components/CartSidebar'
+import { AiRecommendations } from './components/AiRecommendations'
 
 function AppContent() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -68,6 +69,7 @@ function AppContent() {
       </header>
 
       <main>
+        {authenticated && <AiRecommendations userId={keycloak.subject || 'user-1'} />}
         {loading ? (
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>Loading inventory...</div>
         ) : (

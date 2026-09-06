@@ -1,0 +1,74 @@
+.ai-recommendations-container {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.ai-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.sparkle-icon {
+    font-size: 1.5rem;
+    animation: pulse-glow 2s infinite alternate;
+}
+
+.ai-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    background: linear-gradient(to right, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+}
+
+.recommendation-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.25rem;
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 3px solid #a855f7;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.rec-content h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #e2e8f0;
+}
+
+.rec-reason {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    align-self: flex-start;
+}
+
+@keyframes pulse-glow {
+    0% { transform: scale(1); opacity: 0.8; text-shadow: 0 0 5px rgba(168, 85, 247, 0.5); }
+    100% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 15px rgba(168, 85, 247, 0.8); }
+}
