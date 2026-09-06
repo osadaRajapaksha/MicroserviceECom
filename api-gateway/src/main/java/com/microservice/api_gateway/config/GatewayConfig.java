@@ -20,6 +20,9 @@ public class GatewayConfig {
                 .route("inventory-service", r -> r.path("/api/inventory", "/api/inventory/**")
                         .filters(f -> f.circuitBreaker(c -> c.setName("backendCB").setFallbackUri("forward:/fallback")))
                         .uri("lb://inventory-service"))
+                .route("recommendation-service", r -> r.path("/api/recommendations", "/api/recommendations/**")
+                        .filters(f -> f.circuitBreaker(c -> c.setName("backendCB").setFallbackUri("forward:/fallback")))
+                        .uri("lb://recommendation-service"))
                 .build();
     }
 }
