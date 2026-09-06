@@ -78,6 +78,14 @@ services:
     networks:
       - ecom_network
 
+  ai-inference-service:
+    build: ./ai-inference-service
+    container_name: ai-inference-service
+    ports:
+      - "5000:5000"
+    networks:
+      - ecom_network
+
 networks:
   ecom_network:
     driver: bridge
