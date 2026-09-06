@@ -35,3 +35,16 @@ export const placeOrder = async (orderData: { skuCode: string, quantity: number,
     
     return response.text();
 };
+
+export const fetchRecommendations = async (userId: string) => {
+    const headers: any = {};
+    if (keycloak.token) {
+        headers['Authorization'] = `Bearer ${keycloak.token}`;
+    }
+    
+    const response = await fetch(`${API_BASE_URL}/recommendations/user/${userId}`, { headers });
+    if (!response.ok) {
+        throw new Error('Failed to fetch recommendations');
+    }
+    return response.json();
+};
