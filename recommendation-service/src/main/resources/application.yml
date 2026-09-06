@@ -28,3 +28,7 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+ai:
+  inference:
+    url: http://ai-inference-service:5000/predict/recommendations
