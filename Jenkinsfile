@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        // AWS configuration for ECR and EKS
-        AWS_ACCOUNT_ID = '123456789012'
-        REGION = 'us-east-1'
+        // Azure configuration for ACR and AKS
+        AZURE_RESOURCE_GROUP = 'MicroserviceECom-rg'
         CLUSTER_NAME = 'MyEcomCluster'
-        ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+        ACR_NAME = 'myecomclusteracr'
+        ACR_REGISTRY = "${ACR_NAME}.azurecr.io"
         
-        // Use Jenkins credentials ID if pulling from secret manager, otherwise assume EC2 IAM Role
+        // Use Jenkins credentials ID for Azure Service Principal to login to Azure CLI
     }
 
     tools {
@@ -43,42 +43,42 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push (AWS ECR)') {
+        stage('Docker Build & Push (Azure ACR)') {
             steps {
-                echo 'Logging into AWS ECR...'
-                // Using AWS CLI to login to ECR (Requires EC2 IAM Role or AWS Credentials configured in Jenkins)
-                sh "aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
+                echo 'Logging into Azure ACR...'
+                // Using Azure CLI to login to ACR (Requires Azure Service Principal configured in Jenkins)
+                sh "az acr login --name ${ACR_NAME}"
 
                 echo 'Building and Pushing discovery-server image...'
-                sh "docker build -t ${ECR_REGISTRY}/discovery-server:latest ./discovery-server"
-                sh "docker push ${ECR_REGISTRY}/discovery-server:latest"
+                sh "docker build -t ${ACR_REGISTRY}/discovery-server:latest ./discovery-server"
+                sh "docker push ${ACR_REGISTRY}/discovery-server:latest"
 
                 echo 'Building and Pushing api-gateway image...'
-                sh "docker build -t ${ECR_REGISTRY}/api-gateway:latest ./api-gateway"
-                sh "docker push ${ECR_REGISTRY}/api-gateway:latest"
+                sh "docker build -t ${ACR_REGISTRY}/api-gateway:latest ./api-gateway"
+                sh "docker push ${ACR_REGISTRY}/api-gateway:latest"
 
                 echo 'Building and Pushing product-service image...'
-                sh "docker build -t ${ECR_REGISTRY}/product-service:latest ./product-service"
-                sh "docker push ${ECR_REGISTRY}/product-service:latest"
+                sh "docker build -t ${ACR_REGISTRY}/product-service:latest ./product-service"
+                sh "docker push ${ACR_REGISTRY}/product-service:latest"
 
                 echo 'Building and Pushing order-service image...'
-                sh "docker build -t ${ECR_REGISTRY}/order-service:latest ./order-service"
-                sh "docker push ${ECR_REGISTRY}/order-service:latest"
+                sh "docker build -t ${ACR_REGISTRY}/order-service:latest ./order-service"
+                sh "docker push ${ACR_REGISTRY}/order-service:latest"
 
                 echo 'Building and Pushing inventory-service image...'
-                sh "docker build -t ${ECR_REGISTRY}/inventory-service:latest ./inventory-service"
-                sh "docker push ${ECR_REGISTRY}/inventory-service:latest"
+                sh "docker build -t ${ACR_REGISTRY}/inventory-service:latest ./inventory-service"
+                sh "docker push ${ACR_REGISTRY}/inventory-service:latest"
                 
                 echo 'Building and Pushing frontend image...'
-                sh "docker build -t ${ECR_REGISTRY}/frontend:latest ./frontend"
-                sh "docker push ${ECR_REGISTRY}/frontend:latest"
+                sh "docker build -t ${ACR_REGISTRY}/frontend:latest ./frontend"
+                sh "docker push ${ACR_REGISTRY}/frontend:latest"
             }
         }
 
-        stage('Deploy to Kubernetes (AWS EKS)') {
+        stage('Deploy to Kubernetes (Azure AKS)') {
             steps {
-                echo 'Updating Kubeconfig for AWS EKS...'
-                sh "aws eks update-kubeconfig --region ${REGION} --name ${CLUSTER_NAME}"
+                echo 'Updating Kubeconfig for Azure AKS...'
+                sh "az aks get-credentials --resource-group ${AZURE_RESOURCE_GROUP} --name ${CLUSTER_NAME} --overwrite-existing"
 
                 echo 'Applying Kubernetes Manifests...'
                 // Apply all infrastructure and service manifests from the k8s directory
