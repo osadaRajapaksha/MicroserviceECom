@@ -31,7 +31,7 @@ variable "node_vm_size" {
 variable "acr_repositories" {
   description = "List of ACR repositories to create"
   type        = list(string)
-  default     = [
+  default = [
     "discovery-server",
     "api-gateway",
     "product-service",
