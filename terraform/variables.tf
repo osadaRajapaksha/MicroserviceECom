@@ -1,7 +1,13 @@
-variable "aws_region" {
-  description = "The AWS region to deploy resources"
+variable "location" {
+  description = "The Azure Region to deploy resources"
   type        = string
-  default     = "us-east-1"
+  default     = "East US"
+}
+
+variable "resource_group_name" {
+  description = "The name of the resource group"
+  type        = string
+  default     = "MicroserviceECom-rg"
 }
 
 variable "cluster_name" {
@@ -10,20 +16,20 @@ variable "cluster_name" {
   default     = "MyEcomCluster"
 }
 
-variable "vpc_cidr" {
-  description = "The CIDR block for the VPC"
-  type        = string
-  default     = "10.0.0.0/16"
-}
-
-variable "node_instance_types" {
-  description = "Instance types for EKS managed node groups"
+variable "vnet_address_space" {
+  description = "The address space for the VNet"
   type        = list(string)
-  default     = ["t3.large"]
+  default     = ["10.0.0.0/16"]
 }
 
-variable "ecr_repositories" {
-  description = "List of ECR repositories to create"
+variable "node_vm_size" {
+  description = "VM size for AKS node pool"
+  type        = string
+  default     = "Standard_D2_v2"
+}
+
+variable "acr_repositories" {
+  description = "List of ACR repositories to create"
   type        = list(string)
   default     = [
     "discovery-server",
